@@ -149,6 +149,15 @@ class RtcEngineEventHandlerWrapper implements EventLoopEventHandler {
           return true;
         }
         final jsonMap = jsonDecode(eventData);
+        if (jsonMap['totalVolume'] is bool) {
+          jsonMap['totalVolume'] = 0;
+        }
+        for(final user in jsonMap['speakers']) {
+          if (user['uid'] is String) {
+            final newValue = int.tryParse(user['uid']);
+            user['uid'] = newValue;
+          }
+        }
         RtcEngineEventHandlerOnAudioVolumeIndicationJson paramJson =
             RtcEngineEventHandlerOnAudioVolumeIndicationJson.fromJson(jsonMap);
         paramJson = paramJson.fillBuffers(buffers);
